@@ -1,27 +1,20 @@
 import fastapi
 import uvicorn
-from starlette.requests import Request
+
 from starlette.staticfiles import StaticFiles
-from starlette.templating import Jinja2Templates
+
+from views import home
+
 
 api = fastapi.FastAPI()
-templates = Jinja2Templates('templates')
+api.include_router(home.router)
+
 api.mount(
     '/static',
     StaticFiles(directory='static'),
     name='static')
 
 
-@api.get('/')
-def index(request: Request):
-    return templates.TemplateResponse(
-        'home/index.html',
-        {'request': request}
-    )
-
-@api.get('/favicon.ico')
-def favicon():
-    return fastapi.responses.RedirectResponse(url='/static/img/favicon.ico')
 
 
 if __name__ == '__main__':
