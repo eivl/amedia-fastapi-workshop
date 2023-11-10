@@ -38,3 +38,43 @@ async def get_report(city: str,
     weather_cache.set_weather(city, state, country, units, forecast)
 
     return forecast
+
+
+def validate_units(city: str,
+                   state: Optional[str],
+                   country: Optional[str],
+                   units: str):
+
+    if not country:
+        country = 'us'
+    else:
+        country = country.strip().lower()
+
+    if len(country) != 2:
+        raise ValidationError(
+            status_code=400,
+            error_msg=f'Invalid country code. It must be a two letter abbreviation.'
+        )
+
+    city = city.strip().lower()
+
+    if state:
+        state = state.strip().lower()
+
+    if state and len(state) != 2:
+        raise ValidationError(
+            status_code=400,
+            error_msg=f'Invalid state code. It must be a two letter abbreviation.'
+        )
+
+    if units:
+        units = units.strip().lower()
+
+    valid_units = 'standard', 'metric', 'imperial'
+    if units not in valid_units:
+        raise ValidationError(
+            status_code=400,
+            error_msg=f'Invalid unit.'
+        )
+
+    return city, state, country, units
