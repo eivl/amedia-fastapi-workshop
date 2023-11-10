@@ -15,6 +15,13 @@ async def get_report(city: str,
                state: Optional[str],
                country: str,
                units: str):
+    try:
+        city, state, country, units = validate_units(
+            city, state, country, units
+        )
+    except ValidationError as ve:
+        raise ValidationError(error_msg=ve.error_msg, status_code=ve.status_code)
+
     if forecast := weather_cache.get_weather(city, state, country, units):
         return forecast
 
