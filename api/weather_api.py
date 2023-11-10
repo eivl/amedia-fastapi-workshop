@@ -1,8 +1,10 @@
-from typing import Optional
+from typing import Optional, Annotated
 import fastapi
 from fastapi import Depends
 
+from main import get_current_active_user
 from models.location import Location
+from models.user import User
 from models.validation_error import ValidationError
 from services import openweather_service
 
