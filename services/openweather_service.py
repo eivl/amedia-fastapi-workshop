@@ -3,7 +3,9 @@ from dotenv import load_dotenv
 import os
 import httpx
 
+from infrastructure import weather_cache
 from models.validation_error import ValidationError
+
 
 load_dotenv()
 
@@ -13,6 +15,9 @@ async def get_report(city: str,
                state: Optional[str],
                country: str,
                units: str):
+    if forecast := weather_cache.get_weather(city, state, country, units):
+        return forecast
+
     if state:
         query = f'{city},{state},{country}'
     else:
@@ -29,5 +34,7 @@ async def get_report(city: str,
 
     data = response.json()
     forecast = data['main']
+
+    weather_cache.set_weather(city, state, country, units, forecast)
 
     return forecast
