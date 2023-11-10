@@ -11,7 +11,9 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
 from starlette.staticfiles import StaticFiles
 
+from auth.constants import SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES
 from auth.context import oauth2_scheme, pwd_context
+from auth.fake_user_db import fake_users_db
 
 from api import weather_api
 from views import home
@@ -36,22 +38,10 @@ def configure():
 
 
 
-# to get a string like this run:
-# openssl rand -hex 32
-SECRET_KEY = "e01a4ed9180f9bc3d1bb478c9f8d83c148fb19ba838ce174af99741b28cbd654"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 
-fake_users_db = {
-    "ole": {
-        "username": "ole",
-        "full_name": "John Doe",
-        "email": "johndoe@example.com",
-        "hashed_password": "$2b$12$WIE6dzF9zGLUYpnUcbgjje2gh0FGb1bLIY.Q0Jqpqk7DsXqHylDpq",
-        "disabled": False,
-    }
-}
+
+
 
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
