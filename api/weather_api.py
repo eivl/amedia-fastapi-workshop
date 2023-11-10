@@ -9,7 +9,7 @@ from services import openweather_service
 router = fastapi.APIRouter()
 
 
-@router.get("/api/weather/{city}")
+@router.get("/api/weather/{city}", response_model=None)
 async def weather(
     loc: Location = Depends(),
     units: Literal["metric", "standard", "imperial"] = "metric",
