@@ -11,6 +11,8 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
 from starlette.staticfiles import StaticFiles
 
+from auth.context import oauth2_scheme, pwd_context
+
 from api import weather_api
 from views import home
 
