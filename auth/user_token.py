@@ -16,7 +16,14 @@ from models.user import User
 router = fastapi.APIRouter()
 
 
-def create_access_token(data: dict, expires_delta: timedelta | None = None):
+def create_access_token(data: dict, expires_delta: timedelta | None = None) -> str:
+    """
+    Create a JWT token with the given data and expiration time.
+    :param data: dict of data to encode.
+    :param expires_delta: timedelta of expiration time. Defaults to
+    ACCESS_TOKEN_EXPIRE_MINUTES.
+    :return: string of JWT token.
+    """
     to_encode = data.copy()
     if expires_delta:
         expire = datetime.utcnow() + expires_delta
@@ -30,7 +37,13 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
 @router.post("/token", response_model=Token)
 async def login_for_access_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()]
-):
+) -> dict:
+    """
+    Get a JWT token for the user. If the user does not exist or the
+    password is incorrect, raise an exception.
+    :param form_data: OAuth2PasswordRequestForm with username and password.
+    :return: dict with JWT token.
+    """
     user = authenticate_user(fake_users_db, form_data.username, form_data.password)
     if not user:
         raise HTTPException(
@@ -48,5 +61,10 @@ async def login_for_access_token(
 @router.get("/users/me/", response_model=User)
 async def read_users_me(
     current_user: Annotated[User, Depends(get_current_active_user)]
-):
+) -> User:
+    """
+    Example endpoint to limit access to authenticated users.
+    :param current_user: User instance, injected by Depends.
+    :return: instance of User.
+    """
     return current_user
