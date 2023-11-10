@@ -2,6 +2,7 @@ from typing import Annotated
 
 import fastapi
 import uvicorn
+from passlib.context import CryptContext
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
@@ -30,6 +31,13 @@ def configure():
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+# to get a string like this run:
+# openssl rand -hex 32
+SECRET_KEY = "e01a4ed9180f9bc3d1bb478c9f8d83c148fb19ba838ce174af99741b28cbd654"
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 30
+
 
 fake_users_db = {
     "ole": {
