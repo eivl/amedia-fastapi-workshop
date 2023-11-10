@@ -6,7 +6,6 @@ __cache = {}
 lifetime_in_hours = 1.0
 
 
-# get_weather
 def get_weather(city: str,
                 state: Optional[str],
                 country: str,
@@ -25,7 +24,7 @@ def get_weather(city: str,
     del __cache[key]
     return None
 
-# set_weather
+
 def set_weather(city: str, state: str, country: str, units: str, value: dict):
     key = create_key(city, state, country, units)
     data = {
@@ -36,7 +35,6 @@ def set_weather(city: str, state: str, country: str, units: str, value: dict):
     clean_out_data()
 
 
-# lager en unique key
 def create_key(city: str, state: str, country: str, units: str):
     if not city or not country or not units:
         raise Exception('City, country and units are required.')
@@ -46,8 +44,6 @@ def create_key(city: str, state: str, country: str, units: str):
 
     return city.strip().lower(), state.strip().lower(), country.strip().lower(), units.strip().lower()
 
-
-# cleanup
 
 def clean_out_data():
     for key, data in list(__cache.items()):
