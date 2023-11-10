@@ -75,8 +75,8 @@ async def get_current_active_user(
     """
     Get the current active user. If the user is disabled, raise an
     exception.
-    :param current_user:
-    :return:
+    :param current_user: Dependency of current user.
+    :return: User instance.
     """
     if current_user.disabled:
         raise HTTPException(status_code=400, detail="Inactive user")
