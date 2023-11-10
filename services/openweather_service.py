@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 import os
 import httpx
 
+from models.validation_error import ValidationError
 
 load_dotenv()
 
@@ -22,8 +23,9 @@ async def get_report(city: str,
     url = f'{api_url}?q={query}&appid={API_KEY}&units={units}'
 
     async with httpx.AsyncClient() as client:
-        response = await client.get(url)
-        response.raise_for_status()
+        response: httpx.Response = await client.get(url)
+        if response.status_code != httpx.codes.OK:
+            raise ValidationError(response.text, status_code=response.status_code)
 
     data = response.json()
     forecast = data['main']
