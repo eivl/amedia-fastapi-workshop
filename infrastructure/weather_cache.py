@@ -16,8 +16,7 @@ def get_weather(city: str,
     if not data:
         return None
 
-    last = data['time']
-    dt = datetime.datetime.now() - last
+    dt = datetime.datetime.now() - data['time']
     if dt / datetime.timedelta(minutes=60) < lifetime_in_hours:
         return data['value']
 
