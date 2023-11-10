@@ -12,7 +12,16 @@ load_dotenv()
 API_KEY = os.environ.get("OPEN_WEATHERMAP_API")
 
 
-async def get_report(city: str, state: Optional[str], country: str, units: str):
+async def get_report(city: str, state: Optional[str], country: str, units: str) -> dict:
+    """
+    Get weather data from openweathermap.org. If the data is in the cache,
+    return it. Otherwise, get it from the service, cache it, and return it.
+    :param city: string of city name.
+    :param state: string of state name as a two char abbreviation.
+    :param country: string of country name as a two char abbreviation.
+    :param units: literal of "metric", "standard", or "imperial".
+    :return: dict with weather data.
+    """
     try:
         city, state, country, units = validate_units(city, state, country, units)
     except ValidationError as ve:
@@ -42,7 +51,19 @@ async def get_report(city: str, state: Optional[str], country: str, units: str):
     return forecast
 
 
-def validate_units(city: str, state: Optional[str], country: Optional[str], units: str):
+def validate_units(
+    city: str, state: Optional[str], country: Optional[str], units: str
+) -> tuple[str, str, str, str]:
+    """
+    Validate the units, city, state, and country. If the units are invalid,
+    raise a ValidationError. If the country is invalid, openweathermap.org
+    will return a 404, so we don't need to validate it.
+    :param city: string of city name.
+    :param state: string of state name as a two char abbreviation.
+    :param country: string of country name as a two char abbreviation.
+    :param units: literal of "metric", "standard", or "imperial".
+    :return: tuple of city, state, country, and units.
+    """
     if not country:
         country = "us"
     else:

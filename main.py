@@ -12,14 +12,21 @@ api = fastapi.FastAPI()
 
 
 def configure_routing():
+    """
+    Configure routing and include routers.
+    :return:
+    """
     api.include_router(home.router)
     api.include_router(weather_api.router)
     api.include_router(user_token.router)
-    api.mount("/static", StaticFiles(directory="static"), name="static")
-
 
 def configure():
+    """
+    Configure the application. Setup routing and mount static files.
+    :return:
+    """
     configure_routing()
+    api.mount("/static", StaticFiles(directory="static"), name="static")
 
 
 if __name__ == "__main__":
