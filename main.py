@@ -14,6 +14,7 @@ from starlette.staticfiles import StaticFiles
 from auth.constants import SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES
 from auth.context import oauth2_scheme, pwd_context
 from auth.fake_user_db import fake_users_db
+from auth.password import verify_password, get_password_hash
 
 from api import weather_api
 from views import home
@@ -39,16 +40,6 @@ def configure():
 
 
 
-
-
-
-
-def verify_password(plain_password, hashed_password):
-    return pwd_context.verify(plain_password, hashed_password)
-
-
-def get_password_hash(password):
-    return pwd_context.hash(password)
 
 
 def get_user(db, username: str):
