@@ -11,13 +11,28 @@ from models.token import TokenData
 from models.user import UserInDB, User
 
 
-def get_user(db, username: str):
+def get_user(db: dict, username: str) -> UserInDB:
+    """
+    Get a user from the database. The database is a dictionary with
+    usernames as keys and user data as values.
+    :param db: dict of users.
+    :param username: string of username.
+    :return: instance of UserInDB.
+    """
     if username in db:
         user_dict = db[username]
         return UserInDB(**user_dict)
 
 
-def authenticate_user(fake_db, username: str, password: str):
+def authenticate_user(fake_db: dict, username: str, password: str) -> UserInDB | bool:
+    """
+    Authenticate a user. If the user exists and the password matches,
+    return the user, otherwise return False.
+    :param fake_db: dict of users.
+    :param username: string of username.
+    :param password: string of plaintext password.
+    :return: instance of UserInDB or False
+    """
     user = get_user(fake_db, username)
     if not user:
         return False
@@ -26,7 +41,15 @@ def authenticate_user(fake_db, username: str, password: str):
     return user
 
 
-async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
+async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]) -> UserInDB:
+    """
+    Get the current user from the JWT token. If the token is invalid,
+    raise an exception. If the user does not exist in the token, raise
+    an exception. If the user does not exist in the database, raise an
+    exception.
+    :param token: JWT token.
+    :return: UserInDB instance.
+    """
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -48,7 +71,13 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
 
 async def get_current_active_user(
     current_user: Annotated[User, Depends(get_current_user)]
-):
+) -> User:
+    """
+    Get the current active user. If the user is disabled, raise an
+    exception.
+    :param current_user:
+    :return:
+    """
     if current_user.disabled:
         raise HTTPException(status_code=400, detail="Inactive user")
     return current_user
