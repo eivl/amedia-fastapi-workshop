@@ -32,8 +32,7 @@ def configure_routing():
 def configure():
     configure_routing()
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
 
 # to get a string like this run:
 # openssl rand -hex 32
