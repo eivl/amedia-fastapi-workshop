@@ -54,6 +54,7 @@ fake_users_db = {
 def fake_hash_password(password: str):
     return "fakehashed" + password
 
+
 def fake_decode_token(token):
     # This doesn't provide any security at all
     # Check the next version
